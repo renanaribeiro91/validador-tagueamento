@@ -1,0 +1,12 @@
+NOME DO EVENTO,AMBIENTE,PRODUTO,FUNCIONALIDADE,SUBFUNCIONALIDADE,CATEGORIA,TELA,ACAO,ELEMENTO,ROTULO,USER_ID,TIPO_USUARIO,OPCAO_SELECIONADA_1,OPCAO_SELECIONADA_2,OPCAO_SELECIONADA_3,OPCAO_SELECIONADA_4,OPCAO_SELECIONADA_5,OPCAO_SELECIONADA_6
+click,app-saude,,boas-vindas,,,app-saude:boas-vindas:ola,app-saude:boas-vindas:ola,clique,botao,proximo,,,,,,,,
+screen_view,app-saude,,boas-vindas,,,,app-saude:boas-vindas:servicos-de-saude,,,,,,,,,,,
+click,app-saude,,boas-vindas,,,app-saude:boas-vindas:servicos-de-saude,app-saude:boas-vindas:servicos-de-saude,clique,botao,proximo,,,,,,,,
+screen_view,app-saude,,boas-vindas,,,,app-saude:boas-vindas:autorizacao-de-procedimento,,,,,,,,,,,
+click,app-saude,,boas-vindas,,,app-saude:boas-vindas:autorizacao-de-procedimento,app-saude:boas-vindas:autorizacao-de-procedimento,clique,botao,proximo,,,,,,,,
+screen_view,app-saude,,boas-vindas,,,,app-saude:boas-vindas:carteirinha-digital,,,,,,,,,,,
+click,app-saude,,boas-vindas,,,app-saude:boas-vindas:carteirinha-digital,app-saude:boas-vindas:carteirinha-digital,clique,botao,proximo,,,,,,,,
+screen_view,app-saude,,boas-vindas,,,,app-saude:boas-vindas:reembolso,,,,,,,,,,,
+click,app-saude,,boas-vindas,,,app-saude:boas-vindas:reembolso,app-saude:boas-vindas:reembolso,clique,botao,proximo,,,,,,,,
+screen_view,app-saude,,boas-vindas,,,,app-saude:boas-vindas:links,,,,,,,,,,,
+click,app-saude,,boas-vindas,,,app-saude:boas-vindas:links,app-saude:boas-vindas:links,clique,botao,finalizar,,,,,,,,

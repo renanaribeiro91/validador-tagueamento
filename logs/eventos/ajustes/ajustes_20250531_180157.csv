@@ -1,0 +1,3 @@
+NOME DO EVENTO,AMBIENTE,PRODUTO,FUNCIONALIDADE,SUBFUNCIONALIDADE,CATEGORIA,TELA,ACAO,ELEMENTO,ROTULO,USER_ID,TIPO_USUARIO,OPCAO_SELECIONADA_1,OPCAO_SELECIONADA_2,OPCAO_SELECIONADA_3,OPCAO_SELECIONADA_4,OPCAO_SELECIONADA_5,OPCAO_SELECIONADA_6
+click,app-saude,,ajustes,,,app-saude:ajustes,app-saude:ajustes,clique,botao,menu-inferior:inicio,,,,,,,,
+click,app-saude,,ajustes,,,app-saude:ajustes,app-saude:ajustes,clique,botao,menu-inferior:inicio,,,,,,,,

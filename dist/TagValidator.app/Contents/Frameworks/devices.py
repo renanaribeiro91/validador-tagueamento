@@ -1,0 +1,1 @@
+../Resources/devices.py

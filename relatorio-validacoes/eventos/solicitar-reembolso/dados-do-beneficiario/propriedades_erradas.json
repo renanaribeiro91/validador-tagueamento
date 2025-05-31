@@ -1,0 +1,60 @@
+{
+  "total_com_erro": 1,
+  "eventos": [
+    {
+      "ID": 2,
+      "evento": {
+        "NOME DO EVENTO": "click",
+        "AMBIENTE": "[saude]/[concierge]",
+        "PRODUTO": "saude",
+        "FUNCIONALIDADE": "solicitar-reembolso",
+        "SUBFUNCIONALIDADE": "dados-do-beneficiario",
+        "CATEGORIA": "[saude]/[concierge]:saude:solicitar-reembolso:dados-do-beneficiario",
+        "TELA": "[saude]/[concierge]:saude:solicitar-reembolso:dados-do-beneficiario",
+        "ACAO": "clique",
+        "ELEMENTO": "botao",
+        "ROTULO": "dados-do-beneficiario:salvar",
+        "USER_ID": "SHA256('bseg_analytics'+[[cpf-do-usuario]])",
+        "TIPO_USUARIO": "[saude]/[concierge]",
+        "OPCAO_SELECIONADA_1": "",
+        "OPCAO_SELECIONADA_2": "",
+        "OPCAO_SELECIONADA_3": "",
+        "OPCAO_SELECIONADA_4": "",
+        "OPCAO_SELECIONADA_5": "",
+        "OPCAO_SELECIONADA_6": "",
+        "ID": 2
+      },
+      "log": {
+        "STATUS": "OK",
+        "RESPONSAVEL": "jcoletto",
+        "Atualização Octane": "Octane saúde - ok",
+        "O QUE QUEREMOS SABER": "Quantas pessoas clicaram no botão \"Salvar\" do componente de edição de e-mail e teletone na tela de dados do beneficiário?",
+        "NOME DO EVENTO": "click",
+        "AMBIENTE": "[saude]/[concierge]",
+        "PRODUTO": "saude",
+        "FUNCIONALIDADE": "solicitar-reembolso",
+        "SUBFUNCIONALIDADE": "dados-do-beneficiario",
+        "CATEGORIA": "[saude]/[concierge]:saude:solicitar-reembolso:dados-do-beneficiario",
+        "TELA": "[saude]/[concierge]:saude:solicitar-reembolso:dados-do-beneficiario",
+        "ACAO": "clique",
+        "ELEMENTO": "botao",
+        "ROTULO": "dadosbeneficiario:salvar",
+        "USER_ID": "SHA256('bseg_analytics'+[[cpf-do-usuario]])",
+        "TIPO_USUARIO": "[saude]/[concierge]",
+        "OPCAO_SELECIONADA_1": "",
+        "OPCAO_SELECIONADA_2": "",
+        "OPCAO_SELECIONADA_3": "",
+        "OPCAO_SELECIONADA_4": "",
+        "OPCAO_SELECIONADA_5": "",
+        "OPCAO_SELECIONADA_6": "",
+        "ID": "2"
+      },
+      "diferencas": {
+        "ROTULO": {
+          "esperado": "dados-do-beneficiario:salvar",
+          "log": "dadosbeneficiario:salvar"
+        }
+      }
+    }
+  ]
+}

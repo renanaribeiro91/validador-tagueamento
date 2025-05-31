@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard de Validação de Tagueamentos</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Fontes e Ícones -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <link rel="stylesheet" href="/template_dashboard.css" />
+  __DADOS_DASHBOARD__
+  <script src="/dashboard-utils.js"></script>
+  <script src="/dashboard.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-chart-line"></i> Dashboard de Validação de Tagueamentos</h1>
+      <p>Resultados da comparação entre a planilha de QA e os logs de eventos</p>
+    </header>
+
+    <div class="dashboard-updated">
+      Última atualização: <span id="dashboard-timestamp">Carregando...</span>
+    </div>
+
+
+    <div class="card">
+        <h2><i class="fas fa-chart-pie"></i> Resumo</h2>
+        <div class="resumo-container">
+          <div class="resumo-box corretos" id="nav-to-corretos" onclick="DashboardApp.ui.navegarParaAba('corretos')">
+            <i class="fas fa-check-circle"></i>
+            <h2 id="total-corretos"></h2>
+            <p>Eventos Corretos</p>
+          </div>
+          <div class="resumo-box ausentes" id="nav-to-ausentes" onclick="DashboardApp.ui.navegarParaAba('ausentes')">
+            <i class="fas fa-times-circle"></i>
+            <h2 id="total-ausentes"></h2>
+            <p>Eventos Ausentes</p>
+          </div>
+          <div class="resumo-box com-erro" id="nav-to-com-erro" onclick="DashboardApp.ui.navegarParaAba('com-erro')">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h2 id="total-com-erro"></h2>
+            <p>Eventos Com Erros</p>
+          </div>
+          <div class="resumo-box total">
+            <i class="fas fa-list"></i>
+            <h2 id="total-eventos"></h2>
+            <p>Total de Eventos</p>
+          </div>
+        </div>
+      
+        <div id="ai-analysis" class="ai-analysis">
+          <h3>Análise de IA</h3>
+          <div id="ai-analysis-content" class="ai-analysis-content">Carregando análise de IA...</div>
+          <div id="ai-analysis-timestamp" class="ai-analysis-timestamp">Atualizado em: Carregando...</div>
+        </div>
+      </div>
+
+    <div class="card">
+      <h2><i class="fas fa-chart-bar"></i> Métricas</h2>
+      <div class="chart-tabs">
+        <div class="chart-tab active" data-chart="distribuicao">
+          <i class="fas fa-chart-pie"></i> Distribuição de Status
+        </div>
+        <div class="chart-tab" data-chart="erros">
+          <i class="fas fa-exclamation-circle"></i> Tipos de Erros
+        </div>
+        <div class="chart-tab" data-chart="telas">
+          <i class="fas fa-mobile-alt"></i> Eventos por Tela
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="main-chart"></canvas>
+      </div>
+    </div>
+
+    <div class="card" id="eventos-card">
+      <h2><i class="fas fa-tasks"></i> Eventos</h2>
+      <div class="tabs">
+        <div class="tab active" data-tab="corretos">
+          <i class="fas fa-check"></i> Eventos Corretos
+        </div>
+        <div class="tab" data-tab="ausentes">
+          <i class="fas fa-times"></i> Eventos Ausentes
+        </div>
+        <div class="tab" data-tab="com-erro">
+          <i class="fas fa-exclamation"></i> Eventos Com Erros
+        </div>
+      </div>
+
+      <div class="tab-content active" id="corretos-content">
+        <div class="sub-title">
+          <i class="fas fa-check-circle"></i> Eventos processados corretamente:
+        </div>
+        <div id="corretos-container"></div>
+      </div>
+
+      <div class="tab-content" id="ausentes-content">
+        <div class="sub-title">
+          <i class="fas fa-times-circle"></i> Eventos esperados que não foram encontrados no log:
+        </div>
+        <div id="ausentes-container"></div>
+      </div>
+
+      <div class="tab-content" id="com-erro-content">
+        <div class="sub-title">
+          <i class="fas fa-exclamation-triangle"></i> Eventos com diferenças entre o esperado e o log:
+        </div>
+        <div id="com-erro-container"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard de Validação de Tagueamentos</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Fontes e Ícones -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <link rel="stylesheet" href="template_dashboard.css" />
+  <script>window.__DADOS_DASHBOARD__ = {"resumo": {"corretos": 1, "ausentes": 0, "com_erro": 1, "total": 2}, "erros_por_campo": {"ROTULO": 1}, "eventos_por_tela": {"[saude]/[concierge]:saude:solicitar-reembolso:dados-do-beneficiario": 2}, "eventos": {"corretos": [{"NOME DO EVENTO": "screen_view", "AMBIENTE": "[saude]/[concierge]", "PRODUTO": "saude", "FUNCIONALIDADE": "solicitar-reembolso", "SUBFUNCIONALIDADE": "dados-do-beneficiario", "CATEGORIA": "", "TELA": "[saude]/[concierge]:saude:solicitar-reembolso:dados-do-beneficiario", "ACAO": "", "ELEMENTO": "", "ROTULO": "", "USER_ID": "SHA256('bseg_analytics'+[[cpf-do-usuario]])", "TIPO_USUARIO": "[saude]/[concierge]", "OPCAO_SELECIONADA_1": "", "OPCAO_SELECIONADA_2": "", "OPCAO_SELECIONADA_3": "", "OPCAO_SELECIONADA_4": "", "OPCAO_SELECIONADA_5": "", "OPCAO_SELECIONADA_6": "", "ID": 1}], "ausentes": [], "com_erro": [{"ID": 2, "evento": {"NOME DO EVENTO": "click", "AMBIENTE": "[saude]/[concierge]", "PRODUTO": "saude", "FUNCIONALIDADE": "solicitar-reembolso", "SUBFUNCIONALIDADE": "dados-do-beneficiario", "CATEGORIA": "[saude]/[concierge]:saude:solicitar-reembolso:dados-do-beneficiario", "TELA": "[saude]/[concierge]:saude:solicitar-reembolso:dados-do-beneficiario", "ACAO": "clique", "ELEMENTO": "botao", "ROTULO": "dados-do-beneficiario:salvar", "USER_ID": "SHA256('bseg_analytics'+[[cpf-do-usuario]])", "TIPO_USUARIO": "[saude]/[concierge]", "OPCAO_SELECIONADA_1": "", "OPCAO_SELECIONADA_2": "", "OPCAO_SELECIONADA_3": "", "OPCAO_SELECIONADA_4": "", "OPCAO_SELECIONADA_5": "", "OPCAO_SELECIONADA_6": "", "ID": 2}, "log": {"STATUS": "OK", "RESPONSAVEL": "jcoletto", "Atualização Octane": "Octane saúde - ok", "O QUE QUEREMOS SABER": "Quantas pessoas clicaram no botão \"Salvar\" do componente de edição de e-mail e teletone na tela de dados do beneficiário?", "NOME DO EVENTO": "click", "AMBIENTE": "[saude]/[concierge]", "PRODUTO": "saude", "FUNCIONALIDADE": "solicitar-reembolso", "SUBFUNCIONALIDADE": "dados-do-beneficiario", "CATEGORIA": "[saude]/[concierge]:saude:solicitar-reembolso:dados-do-beneficiario", "TELA": "[saude]/[concierge]:saude:solicitar-reembolso:dados-do-beneficiario", "ACAO": "clique", "ELEMENTO": "botao", "ROTULO": "dadosbeneficiario:salvar", "USER_ID": "SHA256('bseg_analytics'+[[cpf-do-usuario]])", "TIPO_USUARIO": "[saude]/[concierge]", "OPCAO_SELECIONADA_1": "", "OPCAO_SELECIONADA_2": "", "OPCAO_SELECIONADA_3": "", "OPCAO_SELECIONADA_4": "", "OPCAO_SELECIONADA_5": "", "OPCAO_SELECIONADA_6": "", "ID": "2"}, "diferencas": {"ROTULO": {"esperado": "dados-do-beneficiario:salvar", "log": "dadosbeneficiario:salvar"}}}]}, "analise_ia": "### 1. Resumo Geral da Situação\nA análise de validação de tags revelou que, de um total de 2 eventos registrados, 1 evento foi considerado correto, enquanto 1 evento apresentou erros. Não foram identificados eventos ausentes. O evento com erro foi analisado em detalhes, e as discrepâncias foram documentadas.\n\n### 2. Padrões ou Problemas Sistemáticos Identificados\nO problema mais evidente é a inconsistência no campo \"ROTULO\" do evento com erro. O valor esperado não corresponde ao valor registrado no log, indicando um padrão de erro que pode ser recorrente em outros eventos, caso não seja corrigido.\n\n### 3. Possíveis Causas Raiz para Eventos Ausentes\nComo não foram identificados eventos ausentes, não há causas raiz a serem discutidas neste contexto. A ausência de eventos pode ser um indicativo de que a implementação da tag está funcionando corretamente, mas também pode sugerir que não houve interações suficientes para gerar eventos.\n\n### 4. Possíveis Causas Raiz para Campos com Erros\nA discrepância no campo \"ROTULO\" pode ser atribuída a:\n- **Erro de digitação**: O valor \"dadosbeneficiario:salvar\" pode ter sido digitado incorretamente, sem o hífen esperado.\n- **Inconsistência na nomenclatura**: Pode haver uma falta de padronização na forma como os rótulos são definidos e utilizados, levando a confusões.\n- **Mudanças não documentadas**: Se houve uma atualização ou mudança na nomenclatura dos rótulos, isso pode não ter sido refletido em todos os pontos de implementação.\n\n### 5. Recomendações Específicas para Corrigir os Problemas\n- **Revisão e Padronização**: Realizar uma revisão completa dos rótulos utilizados em todos os eventos para garantir que estejam padronizados e consistentes.\n- **Documentação**: Manter uma documentação atualizada sobre as nomenclaturas e rótulos utilizados, para que todos os envolvidos na implementação possam referenciar.\n- **Testes de Validação**: Implementar testes de validação mais rigorosos antes do lançamento de novos eventos, para capturar erros de digitação ou inconsistências.\n- **Treinamento**: Oferecer treinamento para a equipe responsável pela implementação das tags, enfatizando a importância da precisão e consistência nos rótulos.\n\n### 6. Conclusão sobre a Qualidade Geral das Tags\nA qualidade geral das tags é razoável, com um bom número de eventos corretos em relação ao total. No entanto, a presença de erros em um dos eventos indica que há espaço para melhorias, especialmente em relação à padronização e documentação. Com as recomendações propostas, é possível aumentar a precisão e a confiabilidade das tags, garantindo que os dados coletados sejam mais úteis e representativos das interações dos usuários."};</script>
+  <script src="dashboard-utils.js"></script>
+  <script src="dashboard.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-chart-line"></i> Dashboard de Validação de Tagueamentos</h1>
+      <p>Resultados da comparação entre a planilha de QA e os logs de eventos</p>
+    </header>
+
+    <div class="dashboard-updated">
+      Última atualização: <span id="dashboard-timestamp">Carregando...</span>
+    </div>
+
+
+    <div class="card">
+        <h2><i class="fas fa-chart-pie"></i> Resumo</h2>
+        <div class="resumo-container">
+          <div class="resumo-box corretos" id="nav-to-corretos" onclick="DashboardApp.ui.navegarParaAba('corretos')">
+            <i class="fas fa-check-circle"></i>
+            <h2 id="total-corretos"></h2>
+            <p>Eventos Corretos</p>
+          </div>
+          <div class="resumo-box ausentes" id="nav-to-ausentes" onclick="DashboardApp.ui.navegarParaAba('ausentes')">
+            <i class="fas fa-times-circle"></i>
+            <h2 id="total-ausentes"></h2>
+            <p>Eventos Ausentes</p>
+          </div>
+          <div class="resumo-box com-erro" id="nav-to-com-erro" onclick="DashboardApp.ui.navegarParaAba('com-erro')">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h2 id="total-com-erro"></h2>
+            <p>Eventos Com Erros</p>
+          </div>
+          <div class="resumo-box total">
+            <i class="fas fa-list"></i>
+            <h2 id="total-eventos"></h2>
+            <p>Total de Eventos</p>
+          </div>
+        </div>
+      
+        <div id="ai-analysis" class="ai-analysis">
+          <h3>Análise de IA</h3>
+          <div id="ai-analysis-content" class="ai-analysis-content">Carregando análise de IA...</div>
+          <div id="ai-analysis-timestamp" class="ai-analysis-timestamp">Atualizado em: Carregando...</div>
+        </div>
+      </div>
+
+    <div class="card">
+      <h2><i class="fas fa-chart-bar"></i> Métricas</h2>
+      <div class="chart-tabs">
+        <div class="chart-tab active" data-chart="distribuicao">
+          <i class="fas fa-chart-pie"></i> Distribuição de Status
+        </div>
+        <div class="chart-tab" data-chart="erros">
+          <i class="fas fa-exclamation-circle"></i> Tipos de Erros
+        </div>
+        <div class="chart-tab" data-chart="telas">
+          <i class="fas fa-mobile-alt"></i> Eventos por Tela
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="main-chart"></canvas>
+      </div>
+    </div>
+
+    <div class="card" id="eventos-card">
+      <h2><i class="fas fa-tasks"></i> Eventos</h2>
+      <div class="tabs">
+        <div class="tab active" data-tab="corretos">
+          <i class="fas fa-check"></i> Eventos Corretos
+        </div>
+        <div class="tab" data-tab="ausentes">
+          <i class="fas fa-times"></i> Eventos Ausentes
+        </div>
+        <div class="tab" data-tab="com-erro">
+          <i class="fas fa-exclamation"></i> Eventos Com Erros
+        </div>
+      </div>
+
+      <div class="tab-content active" id="corretos-content">
+        <div class="sub-title">
+          <i class="fas fa-check-circle"></i> Eventos processados corretamente:
+        </div>
+        <div id="corretos-container"></div>
+      </div>
+
+      <div class="tab-content" id="ausentes-content">
+        <div class="sub-title">
+          <i class="fas fa-times-circle"></i> Eventos esperados que não foram encontrados no log:
+        </div>
+        <div id="ausentes-container"></div>
+      </div>
+
+      <div class="tab-content" id="com-erro-content">
+        <div class="sub-title">
+          <i class="fas fa-exclamation-triangle"></i> Eventos com diferenças entre o esperado e o log:
+        </div>
+        <div id="com-erro-container"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
