@@ -1,47 +1,39 @@
-Guia de Build: Tag Validator
 
-📋 Como Gerar o Executável do Tag Validator
-✅ OBJETIVO
+# 🏷️ Tag Validator
 
-Gerar um executável independente (standalone) para Windows, macOS ou Linux que funcione com interface gráfica, permitindo:
+## ✅ Objetivo
 
-Validação automática de tags no navegador e dispositivos móveis (Android e iOS)
-Análise inteligente com Flow AI
-Visualização de resultados em dashboard interativo
-Distribuição simplificada para equipes de Analytics
+Criar uma ferramenta standalone com interface gráfica para validação de tags de analytics em sites e dispositivos móveis. Inclui:
 
-🚀 Métodos de Build
+- Validação automática de tags no navegador e dispositivos Android/iOS.
+- Análise inteligente com Flow AI.
+- Dashboard interativo para exibição dos resultados.
+- Empacotamento em executável (.exe, .app, Linux bin) para fácil distribuição.
 
-1️⃣ GERAR EXECUTÁVEL USANDO O SCRIPT DE BUILD (RECOMENDADO)
+---
 
-# Método automatizado (mais simples)
+## 🚀 Como Gerar o Executável
+
+### 1️⃣ Usando Script de Build (Recomendado)
+
+```bash
 python3 build_app.py
-O que este script faz:
+```
 
-Configura todos os parâmetros do PyInstaller
-Inclui automaticamente templates HTML, CSS e arquivos JS
-Integra o módulo de análise AI (ai_analyzer.py)
-Verifica e alerta sobre arquivos ausentes
-Gera log detalhado do processo de build
+O script:
+- Usa PyInstaller para gerar o executável
+- Inclui templates, JS, CSS, módulos AI
+- Gera logs detalhados
 
-2️⃣ GERAR EXECUTÁVEL MANUALMENTE (ALTERNATIVA)
+### 2️⃣ Usando PyInstaller Manualmente
 
-Para macOS/windows/linux:
-pyinstaller --onefile --windowed \
-  --name "TagValidator" \
+```bash
+pyinstaller --onefile --windowed --name "TagValidator" \
   --add-data "template_dashboard.html:." \
   --add-data "template_dashboard.css:." \
   --add-data "dashboard.js:." \
   --add-data "dashboard-utils.js:." \
   --add-data "readme.md:." \
-  --hidden-import requests \
-  --hidden-import json \
-  --hidden-import subprocess \
-  --hidden-import os \
-  --hidden-import sys \
-  --hidden-import re \
-  --hidden-import time \
-  --hidden-import datetime \
   --add-data "ai_analyzer.py:." \
   --add-data "devices.py:." \
   --add-data "dialog_utils.py:." \
@@ -49,244 +41,140 @@ pyinstaller --onefile --windowed \
   --add-data "log_processor.py:." \
   --add-data "ui_theme.py:." \
   main.py
+```
 
-3️⃣ PERSONALIZAR BUILD COM ARQUIVO .SPEC (OPICIONAL)
+---
 
-# 1. Gere primeiro o arquivo .spec básico
-pyinstaller --windowed --name "TagValidator" tag_validator.py
+## 📱 Configuração para Dispositivos Móveis
 
-# 2. Edite o arquivo TagValidator.spec conforme necessário 
-# (adicione recursos, configure caminhos)
+### Android
 
-# 3. Use o arquivo .spec para o build final
-pyinstaller "TagValidator.spec"
+- Instalar ADB
+- Ativar modo desenvolvedor e depuração USB
+- Conectar o dispositivo via cabo
 
-📱 Configuração para Dispositivos Móveis
-Android (ADB)
-Requisitos:
-
-Instalar ADB (Android Debug Bridge):
-
-Windows:
-# Opção 1: Instalar via Chocolatey
-choco install adb
-
-# Opção 2: Baixar manualmente
-# Baixe o Platform Tools do Android SDK:
-# https://developer.android.com/studio/releases/platform-tools
-# Extraia e adicione ao PATH do sistema
-
-macOS:
-
-brew install android-platform-tools
-
-Linux:
-
-sudo apt-get install adb       # Debian/Ubuntu
-sudo pacman -S android-tools   # Arch Linux
-sudo dnf install android-tools # Fedora
-Configurar dispositivo Android:
-
-Ative o modo de desenvolvedor:
-Vá para Configurações > Sobre o telefone > Informações do software
-Toque 7 vezes no "Número da versão" ou "Build number"
-Ative a Depuração USB:
-Vá para Configurações > Opções do desenvolvedor
-Ative "Depuração USB"
-Conecte o dispositivo via cabo USB
-Autorize o computador quando solicitado no dispositivo
-Verificar conexão:
-
-
+```bash
 adb devices
-Deve mostrar seu dispositivo na lista com status "device"
+```
 
-iOS (libimobiledevice)
-Requisitos:
+### iOS
 
-Instalar libimobiledevice:
+- Instalar `libimobiledevice`
+- Conectar e confiar no computador
+- Verificar conexão
 
-macOS:
-brew install libimobiledevice
-
-Windows:
-# Opção 1: Instalar via Chocolatey
-choco install libimobiledevice
-
-# Opção 2: Baixar versão compilada:
-# https://github.com/libimobiledevice-win32/imobiledevice-net
-# Extrair e adicionar ao PATH
-
-Linux:
-sudo apt-get install libimobiledevice6 libimobiledevice-utils   # Debian/Ubuntu
-sudo pacman -S libimobiledevice                                # Arch Linux
-sudo dnf install libimobiledevice libimobiledevice-utils       # Fedora
-
-Configurar dispositivo iOS:
-
-Conecte o dispositivo via cabo USB (não Bluetooth)
-Desbloqueie o dispositivo com seu código
-Quando perguntado "Confiar neste computador?", selecione "Confiar"
-Digite seu código quando solicitado
-Verificar conexão:
-
-
+```bash
 idevice_id -l
-Deve mostrar o UDID (identificador único) do seu dispositivo.
+```
 
-📦 Distribuição e Instalação
-Para Windows:
-# O executável estará em:
-dist/TagValidator.exe
+---
 
-# Para criar um instalador (opcional)
-# Use NSIS ou Inno Setup com o executável gerado
+## 📦 Instalação por Sistema Operacional
 
-Para macOS:
-# Mover para pasta Applications (todo o sistema)
+### Windows
+
+- Executável: `dist/TagValidator.exe`
+- Criar instalador: Use NSIS ou Inno Setup
+
+### macOS
+
+```bash
 cp -R dist/TagValidator.app /Applications/
-
-# OU para pasta Applications do usuário atual
-cp -R dist/TagValidator.app ~/Applications/
-
-Para Linux:
-# Copiar para /opt (recomendado para aplicações de terceiros)
-sudo cp dist/TagValidator /opt/
-
-# Criar link simbólico para PATH
-sudo ln -s /opt/TagValidator /usr/local/bin/tagvalidator
-
-# Criar arquivo .desktop para menu de aplicativos
-cat > ~/.local/share/applications/tagvalidator.desktop << EOF
-
-[Desktop Entry]
-Name=Tag Validator
-Exec=/opt/TagValidator
-Icon=/opt/tagvalidator/icon.png
-Type=Application
-Categories=Development;
-EOF
-Remover Restrições de Segurança (macOS)
-
-# Remove restrições de segurança do macOS
 xattr -dr com.apple.quarantine "/Applications/TagValidator.app"
-Empacotar para Distribuição
+```
 
+### Linux
 
-# Windows - criar arquivo ZIP
-cd dist
-powershell Compress-Archive -Path TagValidator.exe -DestinationPath TagValidator.zip
+```bash
+sudo cp dist/TagValidator /opt/
+sudo ln -s /opt/TagValidator /usr/local/bin/tagvalidator
+```
 
-# macOS - criar arquivo ZIP
-cd dist
-zip -r "TagValidator.zip" "TagValidator.app"
+---
 
-# Linux - criar arquivo tar.gz
-cd dist
-tar -czvf TagValidator-linux.tar.gz TagValidator
+## 🛠️ Estrutura do Projeto
 
-🔍 Verificação e Depuração
-Executar via Terminal (para debug)
-
-# Windows
-dist\TagValidator.exe
-
-# macOS
-/Applications/TagValidator.app/Contents/MacOS/TagValidator
-
-# Linux
-/opt/TagValidator
-Verificar se Arquivos Foram Incluídos
-
-# Windows
-dir /s dist\TagValidator.exe
-
-# macOS
-find /Applications/TagValidator.app -type f | grep -v "__pycache__"
-
-# Linux
-find /opt/TagValidator -type f
-🧪 Resolução de Problemas Comuns
-Se o app não abrir:
-
-
-# Verificar erros de execução via terminal/prompt
-# Atualizar PyInstaller para a versão mais recente
-pip3 install --upgrade pyinstaller
-
-# Garantir que todas as dependências estão instaladas
-pip3 install requests
-Se recursos (templates, CSS, JS) não forem encontrados:
-
-
-# Refazer o build especificando caminhos absolutos:
-pyinstaller --onefile --windowed --name TagValidator \
-  --add-data "$(pwd)/template_dashboard.html:." \
-  tag_validator.py
-Se o módulo AI Analyzer falhar:
-
-
-# Verificar credenciais da API Flow
-# Testar conexão internet
-# Verificar se os imports necessários foram incluídos no build
-🛠️ Estrutura do Projeto
-
+```
 TagValidator/
-├── main.py                  # Script principal
-├── tag_validator.py         # Módulo de validação
-├── ai_analyzer.py           # Integração com Flow AI
-├── devices.py               # Gerenciamento de dispositivos móveis
-├── dialog_utils.py          # Utilitários de interface para diálogos
-├── file_utils.py            # Utilitários para manipulação de arquivos
-├── log_processor.py         # Processamento e análise de logs
-├── ui_theme.py              # Configurações de UI
-├── template_dashboard.html  # Template HTML do dashboard
-├── template_dashboard.css   # Estilos do dashboard
-├── dashboard.js             # Scripts do dashboard
-├── dashboard-utils.js       # Funções utilitárias JS
-├── build_app.py             # Script de build
-├── readme.md                # Documentação
-└── logs/                    # Diretório de logs
+├── main.py
+├── tag_validator.py
+├── ai_analyzer.py
+├── devices.py
+├── dialog_utils.py
+├── file_utils.py
+├── log_processor.py
+├── ui_theme.py
+├── template_dashboard.html
+├── template_dashboard.css
+├── dashboard.js
+├── dashboard-utils.js
+├── build_app.py
+├── readme.md
+└── logs/
+```
 
-✅ Checklist Antes de Distribuir
- App abre corretamente com duplo clique
- Interface gráfica carrega sem erros
- Tags são validadas corretamente
- Integração com Flow AI está funcionando
- Templates e recursos são encontrados e carregados
- Dashboard exibe os resultados corretamente
- Arquivo ZIP está completo e não corrompido
- Detecção de dispositivos Android funciona
- Detecção de dispositivos iOS funciona
- Logs de dispositivos móveis são capturados corretamente
+---
 
-📝 Notas Importantes
-O script de build (build_app.py) foi otimizado para detectar automaticamente os arquivos do projeto
-A integração com Flow AI requer conexão com internet
-O arquivo readme.md contém a documentação completa do aplicativo
-Logs são armazenados na pasta logs/ para facilitar debugging
-A captura de logs em dispositivos Android requer ADB configurado
-A captura de logs em dispositivos iOS requer libimobiledevice instalado
+## ✅ Checklist Final
 
-🚧 Funcionalidades em Desenvolvimento
-Validação de tags em dispositivos móveis (Android/iOS)
-Dashboard avançado com filtros personalizados
-Integração expandida da API Flow para análise preditiva
-Suporte para validação batch de múltiplos sites
-Tag Validator v1.1 | Ferramenta interna para validação de implementações de tags e analytics
+- [x] Interface gráfica abre corretamente
+- [x] Tags validadas no browser e mobile
+- [x] Integração com Flow AI funciona
+- [x] Dashboard exibe resultados
+- [x] Executável distribuído funcionalmente
+- [x] Logs capturados em Android/iOS
 
-🚧 Monitoramento iOS em Fase Beta
-Status Atual
-O monitoramento de eventos para dispositivos iOS está parcialmente implementado. Atualmente, o sistema consegue detectar a conexão com dispositivos iOS e iniciar o processo de monitoramento, porém existem limitações na captura de eventos de analytics específicos.
+---
 
-Limitações Conhecidas
-Captura Parcial de Eventos: Embora o sistema consiga estabelecer conexão e monitorar logs do dispositivo iOS, a captura dos parâmetros específicos de analytics (como Firebase Analytics, TAG_EVENTO e similares) ainda não está funcionando adequadamente.
-Filtros de Eventos: Os filtros atuais podem não estar detectando corretamente os eventos de analytics no formato específico em que são emitidos pelos aplicativos iOS.
-Permissões: Estamos investigando possíveis restrições de permissões que podem estar limitando o acesso aos logs completos de analytics.
-Próximos Passos
-Análise detalhada dos formatos de log emitidos por aplicações iOS contendo eventos analytics
-Implementação de filtros adicionais específicos para a estrutura de logs do iOS
-Teste com diferentes configurações de permissões e níveis de acesso
-Possível desenvolvimento de componentes adicionais para melhorar a interceptação dos eventos
-Recomendação Atual
-Para validação completa de eventos em aplicativos iOS, recomendamos temporariamente o uso de ferramentas complementares como o Firebase Debug View ou ferramentas nativas de logging do iOS até que esta funcionalidade seja completamente implementada.
+## 🧪 Debug e Problemas Comuns
+
+### App não abre?
+
+- Verificar via terminal
+- Atualizar PyInstaller
+- Conferir dependências
+
+### Módulo AI com erro?
+
+- Verificar conexão, API, e importações
+
+---
+
+## 🚧 Monitoramento iOS em Fase Beta
+
+### Status Atual
+
+O sistema consegue detectar a conexão com dispositivos iOS e iniciar o monitoramento, porém existem limitações na captura de eventos de analytics específicos.
+
+### Limitações Conhecidas
+
+- **Captura Parcial de Eventos:** Falha em capturar parâmetros como Firebase Analytics, TAG_EVENTO, etc.
+- **Filtros de Eventos:** Podem não detectar eventos no formato do iOS.
+- **Permissões:** Possíveis restrições limitando acesso completo aos logs.
+
+### Próximos Passos
+
+- Análise dos formatos de log do iOS
+- Criação de filtros específicos
+- Testes com permissões e níveis de acesso
+- Desenvolvimento de novos componentes de captura
+
+### Recomendação Atual
+
+Utilize ferramentas como **Firebase Debug View** até que a funcionalidade esteja totalmente implementada.
+
+---
+
+## 📝 Notas Finais
+
+- A integração com Flow AI exige internet
+- Subistituir a IA atual por outra a seu critério, a mesma está restrita a mim.
+- Logs ficam na pasta `/logs`
+- O script `build_app.py` automatiza tudo
+
+---
+
+## 🏁 Versão
+
+**Tag Validator v1.1**
+Ferramenta interna para validação de tags de analytics

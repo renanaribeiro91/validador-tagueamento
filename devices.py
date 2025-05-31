@@ -15,6 +15,7 @@ import os
 import shutil
 import time
 from tkinter import messagebox
+import threading
 
 class AdbHelper:
     """
@@ -422,6 +423,20 @@ class DeviceManager:
     Gerenciador unificado de dispositivos móveis (Android e iOS).
     """
     
+    def __init__(self, log_text=None):
+        """
+        Inicializa o gerenciador de dispositivos
+        
+        Args:
+            log_text: Widget de texto para exibir logs (opcional)
+        """
+        self.log_text = log_text
+        self.logging_process = None
+        self.log_thread = None
+        self.current_device_platform = None
+        self.device_data = []
+        self.device_combo = None  
+    
     @staticmethod
     def get_all_connected_devices():
         """
@@ -434,6 +449,63 @@ class DeviceManager:
             'android': AdbHelper.get_connected_devices(),
             'ios': IosDeviceHelper.get_connected_devices()
         }
+    
+    def populate_device_data(self):
+        """
+        Preenche os dados dos dispositivos conectados
+        
+        Returns:
+            list: Lista de dicionários com informações dos dispositivos
+        """
+        devices = self.get_all_connected_devices()
+        device_data = []
+        
+        # Processar dispositivos Android
+        for device_id in devices['android']:
+            device_info = {
+                "id": device_id,
+                "platform": "android",
+                "name": f"Android Device ({device_id})"
+            }
+            device_data.append(device_info)
+            
+        # Processar dispositivos iOS
+        for device_id in devices['ios']:
+            name = f"iOS Device ({device_id})"
+            # Tentar obter informações extras se for confiável
+            if IosDeviceHelper.verify_trust_status(device_id):
+                info = IosDeviceHelper.get_device_info(device_id)
+                if info and 'name' in info:
+                    name = info['name']
+            
+            device_info = {
+                "id": device_id,
+                "platform": "ios",
+                "name": name
+            }
+            device_data.append(device_info)
+            
+        self.device_data = device_data
+        return device_data
+    
+    def update_device_combo(self):
+        """
+        Atualiza o combobox de dispositivos com os dispositivos conectados
+        """
+        if not self.device_combo:
+            return
+            
+        # Limpar combobox
+        self.device_combo.set("")
+        self.device_combo['values'] = []
+        
+        # Obter dispositivos e popular combobox
+        devices = self.populate_device_data()
+        device_names = [device['name'] for device in devices]
+        
+        if device_names:
+            self.device_combo['values'] = device_names
+            self.device_combo.current(0)  # Seleciona o primeiro por padrão
     
     @staticmethod
     def start_logging(device_id, platform):
@@ -458,10 +530,19 @@ class DeviceManager:
         """
         Inicia a captura de logs do dispositivo selecionado
         """
+        if not self.device_combo:
+            messagebox.showerror("Erro", "Interface de usuário não inicializada")
+            return
+            
         selected_index = self.device_combo.current()
         
         if selected_index == -1 or not self.device_data:
             messagebox.showerror("Erro", "Nenhum dispositivo selecionado")
+            return
+        
+        # Verificar se já há um processo em execução
+        if self.logging_process and self.logging_process.poll() is None:
+            messagebox.showinfo("Info", "Já existe uma captura de logs em andamento")
             return
         
         # Obtém os dados do dispositivo selecionado
@@ -477,22 +558,26 @@ class DeviceManager:
             
             # Configurar para ler as linhas do processo em uma thread separada
             if log_process:
-                import threading
-                
                 def read_output():
                     while log_process and log_process.poll() is None:
-                        line = log_process.stdout.readline()
-                        if line:
-                            # Processar a linha e exibir na UI
-                            # Chamar método para processar e exibir log na UI
-                            self.process_log_line(line.strip(), platform)
+                        try:
+                            line = log_process.stdout.readline()
+                            if line:
+                                # Processar a linha e exibir na UI
+                                # Chamar método para processar e exibir log na UI
+                                self.process_log_line(line.strip(), platform)
+                        except Exception as e:
+                            print(f"Erro na thread de leitura: {str(e)}")
+                            break
                 
                 # Iniciar thread para ler output
                 self.log_thread = threading.Thread(target=read_output, daemon=True)
                 self.log_thread.start()
                 
                 # Atualizar a UI para indicar que a captura está em andamento
-                # [atualização da UI aqui]
+                if self.log_text:
+                    self.log_text.insert("end", f"=== Iniciando captura de logs para {device_info['name']} ===\n")
+                    self.log_text.see("end")
             else:
                 messagebox.showerror("Erro", "Não foi possível iniciar o processo de log")
                 
@@ -508,9 +593,9 @@ class DeviceManager:
             platform (str): 'android' ou 'ios'
         """
         try:
-            # Inserir a linha no widget de texto/log da UI
-            # Neste exemplo, assumimos que existe um widget Text chamado self.log_text
-            
+            if not self.log_text:
+                return
+                
             # Talvez você queira aplicar filtros ou formatação específica para cada plataforma
             if platform == 'android':
                 # Processamento específico para Android
@@ -523,6 +608,31 @@ class DeviceManager:
             self.log_text.see("end")
         except Exception as e:
             print(f"Erro ao processar linha de log: {str(e)}")
+    
+    def stop_device_logging(self):
+        """
+        Interrompe a captura de logs em andamento
+        """
+        if not self.logging_process:
+            messagebox.showinfo("Info", "Nenhuma captura de logs em andamento")
+            return
+            
+        try:
+            # Interromper o processo conforme a plataforma
+            if self.current_device_platform:
+                DeviceManager.stop_logging(self.logging_process, self.current_device_platform)
+                
+                # Registrar na interface
+                if self.log_text:
+                    self.log_text.insert("end", "\n=== Captura de logs interrompida ===\n")
+                    self.log_text.see("end")
+                
+                # Limpar as referências
+                self.logging_process = None
+                self.current_device_platform = None
+                
+        except Exception as e:
+            messagebox.showerror("Erro", f"Erro ao interromper captura de logs: {str(e)}")
     
     @staticmethod
     def stop_logging(process, platform_type):

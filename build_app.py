@@ -1,8 +1,29 @@
-# build_app.py
 import os
 import shutil
 import subprocess
 import platform
+
+def find_platform_tools():
+    """Find platform-specific tools needed for device detection"""
+    tools = {}
+    
+    # Encontrar ADB
+    adb_cmd = "adb"
+    if platform.system() == "Windows":
+        adb_cmd += ".exe"
+    
+    adb_path = shutil.which(adb_cmd)
+    if adb_path:
+        tools["adb"] = adb_path
+    
+    # Encontrar ferramentas iOS
+    if platform.system() in ["Darwin", "Linux"]:
+        for tool in ["idevice_id", "ideviceinfo", "idevicesyslog"]:
+            path = shutil.which(tool)
+            if path:
+                tools[tool] = path
+    
+    return tools
 
 def clean_build_directories():
     """Clean build and dist directories"""
@@ -77,6 +98,26 @@ if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 import main
 main.main()  # Call the main function
 ''')
+    
+    # Create directory for platform tools
+    tools_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tools")
+    os.makedirs(tools_dir, exist_ok=True)
+    
+    # Find and copy platform tools
+    tools = find_platform_tools()
+    platform_binaries = []
+    
+    if tools:
+        print("🔍 Found platform tools:")
+        for tool_name, tool_path in tools.items():
+            print(f"  - {tool_name}: {tool_path}")
+            
+            # Determine separator based on OS
+            separator = ";" if platform.system() == "Windows" else ":"
+            platform_binaries.append(f"--add-binary={tool_path}{separator}.")
+    else:
+        print("⚠️ No platform tools (adb, idevice_id) found in PATH!")
+        print("   Device detection might not work in the packaged application.")
 
     # Build command with data files
     data_files = []
@@ -84,6 +125,7 @@ main.main()  # Call the main function
         if os.path.exists(resource):
             data_files.append(f'--add-data={resource}:.')
     
+    # Add module files as data
     for module in modules:
         if os.path.exists(module):
             data_files.append(f'--add-data={module}:.')
@@ -104,13 +146,23 @@ main.main()  # Call the main function
     # Add all data files
     cmd.extend(data_files)
     
-    # Add hidden imports
-    cmd.extend([
+    # Add platform-specific binaries
+    cmd.extend(platform_binaries)
+    
+    # Add hidden imports for all modules
+    hidden_imports = [
         '--hidden-import=tkinter',
         '--hidden-import=pandas', 
         '--hidden-import=matplotlib',
         '--hidden-import=numpy',
-    ])
+    ]
+    
+    # Add all Python modules as hidden imports
+    for module in modules:
+        module_name = module.replace('.py', '')
+        hidden_imports.append(f'--hidden-import={module_name}')
+    
+    cmd.extend(hidden_imports)
     
     # Finally add the wrapper script
     cmd.append('macos_wrapper.py')
@@ -119,7 +171,11 @@ main.main()  # Call the main function
     print("🔨 Running PyInstaller with these options:")
     for arg in cmd:
         if arg.startswith('--add-data='):
-            print(f"  - Adding: {arg.split('=')[1].split(':')[0]}")
+            print(f"  - Adding data: {arg.split('=')[1].split(':')[0]}")
+        elif arg.startswith('--add-binary='):
+            print(f"  - Adding binary: {arg.split('=')[1].split(':')[0]}")
+        elif arg.startswith('--hidden-import='):
+            print(f"  - Hidden import: {arg.split('=')[1]}")
         else:
             print(f"  - {arg}")
     
@@ -132,16 +188,18 @@ main.main()  # Call the main function
     if result.returncode == 0:
         print("✅ Build completed successfully!")
         
-        # Set permissions for macOS
-        app_path = os.path.abspath('dist/TagValidator.app')
-        subprocess.run(['chmod', '-R', '755', app_path])
-        subprocess.run(['xattr', '-rd', 'com.apple.quarantine', app_path])
-        print(f"\n📦 App built at: {app_path}")
-        
-        print("\n🔍 To troubleshoot any issues:")
-        print("1. Run the app from Terminal with:")
-        print(f"   ./dist/TagValidator.app/Contents/MacOS/TagValidator")
-        print("2. If it works in Terminal but not when double-clicked, it's likely a path issue.")
+        if platform.system() == "Darwin":  # macOS specific
+            app_path = os.path.abspath('dist/TagValidator.app')
+            subprocess.run(['chmod', '-R', '755', app_path])
+            subprocess.run(['xattr', '-rd', 'com.apple.quarantine', app_path])
+            print(f"\n📦 App built at: {app_path}")
+            
+            print("\n🔍 To troubleshoot any issues:")
+            print("1. Run the app from Terminal with:")
+            print(f"   ./dist/TagValidator.app/Contents/MacOS/TagValidator")
+            print("2. If it works in Terminal but not when double-clicked, it's likely a path issue.")
+        else:
+            print(f"\n📦 App built at: {os.path.abspath('dist')}")
     else:
         print("❌ Build failed")
     
